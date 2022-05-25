@@ -34,23 +34,6 @@ const RemindersScreen = ({ route, navigation }) => {
     }
   }; 
 
-  const addRemindersNotDisplayed = (newArr) => {
-    if (display === "Not Done") {
-      newArr = newArr.concat(
-        reminders.filter((i) => {
-          return i.done;
-        })
-      );
-    } else if (display === "Done") {
-      newArr = newArr.concat(
-        reminders.filter((i) => {
-          return !i.done;
-        })
-      );
-    }
-    return newArr;
-  };
-
   const renderReminder = ({ index, item }) => {
     return (
       <CheckBox

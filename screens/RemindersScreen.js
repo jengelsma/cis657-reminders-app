@@ -14,7 +14,11 @@ const RemindersScreen = ({ route, navigation }) => {
     { text: "take out trash", done: false },
   ];
 
-  const [reminders, setReminders] = useState(items);
+  const [reminders, setReminders] = useState(items.sort(comparator));
+
+  const comparator = (item1, item2) => {
+    return item1.text.toLowerCase() > item2.text.toLowerCase();
+  };
 
   const renderReminder = ({ index, item }) => {
     return (
@@ -24,13 +28,13 @@ const RemindersScreen = ({ route, navigation }) => {
         onPress={() => {
           let newArr = [...reminders];
           newArr[index] = { ...item, done: !item.done };
-          setReminders(newArr);
+          setReminders(newArr.sort(comparator));
         }}
         onLongPress={() => {
           let newArr = reminders.filter((val, idx) => {
             return idx == index ? false : true;
           });
-          setReminders(newArr);
+          setReminders(newArr.sort(comparator));
           Toast.show(`Deleted ${item.text}!`, {
             duration: Toast.durations.LONG,
             animation: true,
@@ -40,6 +44,13 @@ const RemindersScreen = ({ route, navigation }) => {
       />
     );
   };
+
+  useEffect(() => {
+    if (route.params?.text) {
+      setReminders([...reminders, route.params].sort(comparator));
+    }
+  }, [route.params?.text]);
+
 
   useEffect(() => {
     navigation.setOptions({

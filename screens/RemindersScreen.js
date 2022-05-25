@@ -1,7 +1,9 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 
+import { CheckBox } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
+import  Toast from 'react-native-root-toast';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const RemindersScreen = ({ route, navigation }) => {
@@ -14,7 +16,30 @@ const RemindersScreen = ({ route, navigation }) => {
 
   const [reminders, setReminders] = useState(items);
 
-
+  const renderReminder = ({ index, item }) => {
+    return (
+      <CheckBox
+        title={item.text}
+        checked={item.done}
+        onPress={() => {
+          let newArr = [...reminders];
+          newArr[index] = { ...item, done: !item.done };
+          setReminders(newArr);
+        }}
+        onLongPress={() => {
+          let newArr = reminders.filter((val, idx) => {
+            return idx == index ? false : true;
+          });
+          setReminders(newArr);
+          Toast.show(`Deleted ${item.text}!`, {
+            duration: Toast.durations.LONG,
+            animation: true,
+            hideOnPress: true,
+          });
+        }}
+      />
+    );
+  };
 
   useEffect(() => {
     navigation.setOptions({
@@ -34,11 +59,11 @@ const RemindersScreen = ({ route, navigation }) => {
     <FlatList
       keyExtractor={(item) => item.text}
       data={reminders}
-      renderItem={({ index, item }) => {
-        return <Text> {item.text} </Text>;
-      }}
+      renderItem={renderReminder}
     />
-  );
+  );  
+
+
 
 
 };

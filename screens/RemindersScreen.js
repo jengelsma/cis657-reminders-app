@@ -1,9 +1,11 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import {
+  deleteReminder,
   initRemindersDB,
   setupReminderListener,
   storeReminderItem,
+  updateReminder
 } from "../helpers/fb-reminders";
 
 import { CheckBox } from 'react-native-elements';
@@ -55,18 +57,10 @@ const RemindersScreen = ({ route, navigation }) => {
         title={item.text}
         checked={item.done}
         onPress={() => {
-          var newArr = [...reminders.filter(displayFilter)];
-          newArr[index] = { text: item.text, done: !item.done };
-          addRemindersNotDisplayed(newArr);
-          setReminders(newArr.sort(comparator));
+          updateReminder({ ...item, done: !item.done });
         }}
         onLongPress={() => {
-          let subset = reminders.filter(displayFilter);
-          let newArr = subset.filter((val, idx) => {
-            return idx == index ? false : true;
-          });
-          addRemindersNotDisplayed(newArr)
-          setReminders(newArr.sort(comparator));
+          deleteReminder(item);
           Toast.show(`Deleted ${item.text}!`, {
             duration: Toast.durations.SHORT,
             animation: true,
@@ -109,7 +103,7 @@ const RemindersScreen = ({ route, navigation }) => {
             }
           }}
         >
-          <Text style={styles.textStyle}> {display} </Text>
+          <Text style={styles.buttonStyle}> {display} </Text>
         </TouchableOpacity>
       ),
       headerRight: () => (
@@ -118,7 +112,7 @@ const RemindersScreen = ({ route, navigation }) => {
             navigation.navigate("AddReminder");
           }}
         >
-          <Feather style={{ marginRight: 10 }} name="edit" size={24} />
+          <Feather style={styles.buttonStyle} name="edit" size={24} />
         </TouchableOpacity>
       ),
     });
@@ -134,7 +128,12 @@ const RemindersScreen = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  buttonStyle: {
+    margin: 10,
+    color: "blue",
+  },
 });
+
 
 export default RemindersScreen;
 

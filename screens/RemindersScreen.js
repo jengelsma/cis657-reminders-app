@@ -2,8 +2,8 @@ import { FlatList, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import {
   initRemindersDB,
-  setupDataListener,
-  writeData,
+  setupReminderListener,
+  storeReminderItem,
 } from "../helpers/fb-reminders";
 
 import { CheckBox } from 'react-native-elements';
@@ -13,13 +13,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const RemindersScreen = ({ route, navigation }) => {
 
-  const items = [
-    { text: "get groceries", done: false },
-    { text: "feed dog", done: false },
-    { text: "take out trash", done: false },
-  ];
+  const [reminders, setReminders] = useState([]);
 
-  const [reminders, setReminders] = useState(items.sort(comparator));
+
   const [display, setDisplay] = useState("All");
 
   const comparator = (item1, item2) => {
@@ -87,16 +83,17 @@ const RemindersScreen = ({ route, navigation }) => {
     } catch (err) {
       console.log(err);
     }
-    setupDataListener("score");
+    setupReminderListener((items) => {
+      console.log("setting state with: ", items);
+      setReminders(items.sort(comparator));
+    });
   }, []);
-
-
+  
   useEffect(() => {
     if (route.params?.text) {
-      setReminders([...reminders, route.params].sort(comparator));
+      storeReminderItem(route.params);
     }
   }, [route.params?.text]);
-
 
   useEffect(() => {
     navigation.setOptions({
@@ -110,7 +107,6 @@ const RemindersScreen = ({ route, navigation }) => {
             } else {
               setDisplay("All");
             }
-            writeData("score", { display });
           }}
         >
           <Text style={styles.textStyle}> {display} </Text>
@@ -130,7 +126,6 @@ const RemindersScreen = ({ route, navigation }) => {
 
   return (
     <FlatList
-      keyExtractor={(item) => item.text}
       data={reminders.filter(displayFilter)}
       renderItem={renderReminder}
     />

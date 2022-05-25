@@ -1,4 +1,4 @@
-import { getDatabase, onValue, push, ref } from "firebase/database";
+import { getDatabase, onValue, push, ref, remove, set } from "firebase/database";
 
 import { firebaseConfig } from "./fb-credentials";
 import { initializeApp } from "firebase/app";
@@ -37,4 +37,18 @@ export function setupReminderListener(updateFunc) {
     }
   });
 } 
+
+export function updateReminder(item) {
+  const key = item.id;
+  delete item.id;
+  const db = getDatabase();
+  const reference = ref(db,`reminderData/${key}`);
+  set(reference, item);
+}
+
+export function deleteReminder(item) {
+  const db = getDatabase();
+  const reference = ref(db, `reminderData/${item.id}`);
+  remove(reference);
+}
 

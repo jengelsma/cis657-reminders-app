@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from 'react';
 import {
   deleteReminder,
@@ -11,7 +11,6 @@ import {
 import { CheckBox } from 'react-native-elements';
 import { Feather } from '@expo/vector-icons';
 import  Toast from 'react-native-root-toast';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const RemindersScreen = ({ route, navigation }) => {
 
@@ -45,7 +44,7 @@ const RemindersScreen = ({ route, navigation }) => {
         onLongPress={() => {
           deleteReminder(item);
           Toast.show(`Deleted ${item.text}!`, {
-            duration: Toast.durations.SHORT,
+            duration: Toast.durations.LONG,
             animation: true,
             hideOnPress: true,
           });

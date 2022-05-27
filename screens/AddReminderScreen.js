@@ -1,8 +1,13 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 
 import { Input } from 'react-native-elements';
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const AddReminderScreen = ({ route, navigation }) => {
 
@@ -16,7 +21,7 @@ const AddReminderScreen = ({ route, navigation }) => {
             navigation.navigate("Reminders", { text: reminder, done: false });
           }}
         >
-          <Text>Save</Text>
+          <Text style={styles.buttonStyle}>Save</Text>
         </TouchableOpacity>
       ),
 
@@ -26,7 +31,7 @@ const AddReminderScreen = ({ route, navigation }) => {
             navigation.navigate("Reminders");
           }}
         >
-          <Text>Cancel</Text>
+          <Text style={styles.buttonStyle}>Cancel</Text>
         </TouchableOpacity>
       ),
     });
@@ -43,6 +48,11 @@ const AddReminderScreen = ({ route, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  buttonStyle: {
+    margin: 10,
+    color: "blue",
+  },
+});
 
 export default AddReminderScreen;
